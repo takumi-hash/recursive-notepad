@@ -4,6 +4,7 @@
 /public/storage
 /storage/*.key
 /vendor
+devlog.md
 .env
 .env.backup
 .env.production
