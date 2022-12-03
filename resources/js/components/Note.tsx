@@ -101,65 +101,82 @@ const Note = () => {
             <div className="col-md-4">
                 {notes.map((note) => (
                     <>
-                        <div key={note.id} className="card my-5">
+                        <div key={note.id} className="card mb-3">
                             <div className="card-header">{note.title}</div>
-                            <div className="card-body">{note.body}</div>
                             <div className="card-body">
-                                Create At: {note.created_at}
+                                <p>{note.body}</p>
+                                <p> Create At: {note.created_at}</p>
+                                <p>Updated At: {note.updated_at}</p>
+                                <button
+                                    type="button"
+                                    className="btn btn-outline-primary me-3"
+                                    onClick={() => selectNote(note)}
+                                >
+                                    選択
+                                </button>
+                                <button
+                                    type="button"
+                                    className="btn btn-outline-danger me-3"
+                                    onClick={() => deleteNote(note.id)}
+                                >
+                                    削除
+                                </button>
                             </div>
-                            <div className="card-body">
-                                Updated At: {note.updated_at}
-                            </div>
-                            <button onClick={() => selectNote(note)}>
-                                選択
-                            </button>
-                            <button
-                                className="btn btn-danger"
-                                onClick={() => deleteNote(note.id)}
-                            >
-                                削除
-                            </button>
                         </div>
                     </>
                 ))}
             </div>
             <div className="col-md-8">
-                <label>
-                    タイトル:
-                    <input value={selectedTitle} onChange={handleTitleChange} />
-                </label>
-                <label>
-                    本文:
-                    <input value={selectedBody} onChange={handleBodyChange} />
-                </label>
-                <br />
-                {(() => {
-                    if (selectedId) {
-                        return (
-                            <button
-                                className="btn btn-success"
-                                onClick={updateNote}
-                            >
-                                更新
-                            </button>
-                        );
-                    } else {
-                        return (
-                            <button
-                                className="btn btn-prymary"
-                                onClick={createNote}
-                            >
-                                新規保存
-                            </button>
-                        );
-                    }
-                })()}
-                <button
-                    className="btn btn-outline-danger"
-                    onClick={() => deleteNote(selectedId)}
-                >
-                    削除
-                </button>
+                <form action="">
+                    <div className="mb-3">
+                        <input
+                            type="text"
+                            id="titleText"
+                            className="form-control"
+                            value={selectedTitle}
+                            onChange={handleTitleChange}
+                            placeholder="タイトル"
+                        />
+                    </div>
+                    <div className="mb-3">
+                        <textarea
+                            className="form-control"
+                            id="bodyText"
+                            rows="10"
+                            value={selectedBody}
+                            onChange={handleBodyChange}
+                            placeholder="本文"
+                        ></textarea>
+                    </div>
+                    <br />
+                    {(() => {
+                        if (selectedId) {
+                            return (
+                                <button
+                                    className="btn btn-success me-3"
+                                    onClick={updateNote}
+                                >
+                                    更新
+                                </button>
+                            );
+                        } else {
+                            return (
+                                <button
+                                    className="btn btn-primary me-3"
+                                    onClick={createNote}
+                                >
+                                    新規保存
+                                </button>
+                            );
+                        }
+                    })()}
+                    <button
+                        className="btn btn-outline-danger me-3"
+                        onClick={() => deleteNote(selectedId)}
+                    >
+                        削除
+                    </button>
+                </form>
             </div>
         </>
     );
