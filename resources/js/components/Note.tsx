@@ -41,6 +41,12 @@ const Note = () => {
         setSelectedBody(e.target.value);
     };
 
+    const clearSelectedNote = () => {
+        setSelectedId(null);
+        setSelectedTitle("");
+        setSelectedBody("");
+    };
+
     const createNote = (): void => {
         axios
             .post(window.location.origin + `/notes`, {
@@ -48,12 +54,10 @@ const Note = () => {
                 body: selectedBody,
             })
             .then((response) => {
-                setNotes([...notes, response.data]);
+                setNotes(response.data);
             })
             .then(() => {
-                setSelectedId("");
-                setSelectedBody("");
-                setSelectedTitle("");
+                clearSelectedNote();
             })
             .catch((error) => {
                 console.log(error);
@@ -81,18 +85,13 @@ const Note = () => {
         setSelectedBody(note.body);
     };
 
-    const clearSelectedNote = () => {
-        setSelectedId(null);
-        setSelectedTitle("");
-        setSelectedBody("");
-    };
-
     const deleteNote = (id: number) => {
         axios
             .delete(window.location.origin + "/notes/" + `${id}`)
             .then((response) => {
                 console.log(response);
                 setNotes(notes.filter((note) => note.id !== id));
+                clearSelectedNote();
             })
             .catch((error) => console.log(error));
     };

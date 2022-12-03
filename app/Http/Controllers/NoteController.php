@@ -12,7 +12,7 @@ class NoteController extends Controller
     }
 
     public function index(Request $request){
-        return Auth::user()->notes()->get();
+        return Auth::user()->notes()->orderBy('updated_at', 'desc')->get();
     }
 
     public function show($id){
@@ -25,9 +25,16 @@ class NoteController extends Controller
             'body'=>$request->body,
         ]);
 
-        return response()->json(
-            $new_note
-        );
+        $notes = Auth::user()->notes()->orderBy('updated_at', 'desc')->get();
+        if ($notes) {
+            return response()->json(
+                $notes
+            , 200);
+        } else {
+            return response()->json([
+                'message' => 'Notes not found',
+            ], 404);
+        }
     }
 
     public function update(Request $request, $id){
@@ -36,7 +43,7 @@ class NoteController extends Controller
         $note->body = $request->body;
         $note->save();
 
-        $notes = Auth::user()->notes()->get();
+        $notes = Auth::user()->notes()->orderBy('updated_at', 'desc')->get();
         if ($notes) {
             return response()->json(
                 $notes
