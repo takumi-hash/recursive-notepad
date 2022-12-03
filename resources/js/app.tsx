@@ -1,6 +1,5 @@
 import "./bootstrap";
 import Note from "./components/Note";
-import Editor from "./components/Editor";
 
 import React from "react";
 import ReactDOM from "react-dom/client";
