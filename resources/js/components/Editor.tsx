@@ -3,19 +3,22 @@ import axios from "axios";
 
 import Note from "./Note";
 
-const Editor = () => {
-    const [notes, setNotes] = useState<Note>({
-        id: 0,
-        title: "",
-        body: "",
-    });
+const Editor = ({ note }) => {
+    const [noteDetail, setNoteDetail] = useState();
 
     useEffect(() => {
-        axios
-            .get(window.location.origin + `/notes/1`)
-            .then((response) => setNotes(response.data))
-            .catch((error) => console.log(error));
-    }, []);
+        const getUser = async () => {
+            const response = await axios
+                .get(window.location.origin + `/notes/${noteDetail.id}`)
+                .then((response) => setNoteDetail(response.data));
+            console.log(response.data);
+        };
+        getUser();
+        // axios
+        //     .get(window.location.origin + `/notes/${noteDetail.id}`)
+        //     .then((response) => setNoteDetail(response.data))
+        //     .catch((error) => console.log(error));
+    }, [noteDetail]);
 
     const [title, setTitle] = useState<string>("");
     const handleTitleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -28,15 +31,13 @@ const Editor = () => {
     };
 
     const saveNote = (): void => {
-        const timestamp = new Date();
         axios
             .post(window.location.origin + "/notes", {
                 title: title,
                 body: body,
-                createdAt: timestamp,
             })
             .then((response) => {
-                setNotes([...notes, response.data]);
+                setNoteDetail([...note, response.data]);
             })
             .then(() => {
                 setBody("");
@@ -52,7 +53,7 @@ const Editor = () => {
             .delete(window.location.origin + "/notes/" + `${id}`)
             .then((response) => {
                 console.log(response);
-                setNotes(notes.filter((note) => note.id !== id));
+                setNoteDetail(noteDetail.filter((note) => note.id !== id));
             })
             .catch((error) => console.log(error));
     };
@@ -63,7 +64,7 @@ const Editor = () => {
                 body: body,
             })
             .then((response) => {
-                setNotes(response.data);
+                setNoteDetail(response.data);
             })
             .then(() => {
                 setTitle("");
@@ -86,7 +87,7 @@ const Editor = () => {
             <button onClick={saveNote}>保存</button>
             <button
                 className="btn btn-danger"
-                onClick={() => deleteNote(note.id)}
+                onClick={() => deleteNote(noteDetail.id)}
             >
                 削除
             </button>

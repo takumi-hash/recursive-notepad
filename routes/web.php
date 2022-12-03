@@ -22,3 +22,7 @@ Auth::routes();
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
 
 Route::get('/notes', [App\Http\Controllers\NoteController::class, 'index']);
+Route::get('/notes/{id}', [App\Http\Controllers\NoteController::class, 'show']);
+Route::post('/notes', [App\Http\Controllers\NoteController::class, 'create']);
+Route::put('/notes/{id}', [App\Http\Controllers\NoteController::class, 'update']);
+Route::delete('/notes/{id}', [App\Http\Controllers\NoteController::class, 'destroy']);

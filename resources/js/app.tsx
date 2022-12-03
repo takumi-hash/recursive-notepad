@@ -10,12 +10,7 @@ function App() {
         <>
             <div className="row justify-content-center">
                 <h2>My Notes</h2>
-                <div className="col-md-4">
-                    <Note />
-                </div>
-                <div className="col-md-8">
-                    <Editor />
-                </div>
+                <Note />
             </div>
         </>
     );
