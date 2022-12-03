@@ -135,13 +135,27 @@ const Note = () => {
                 <br />
                 {(() => {
                     if (selectedId) {
-                        return <button onClick={updateNote}>更新</button>;
+                        return (
+                            <button
+                                className="btn btn-success"
+                                onClick={updateNote}
+                            >
+                                更新
+                            </button>
+                        );
                     } else {
-                        return <button onClick={createNote}>新規保存</button>;
+                        return (
+                            <button
+                                className="btn btn-prymary"
+                                onClick={createNote}
+                            >
+                                新規保存
+                            </button>
+                        );
                     }
                 })()}
                 <button
-                    className="btn btn-danger"
+                    className="btn btn-outline-danger"
                     onClick={() => deleteNote(selectedId)}
                 >
                     削除
