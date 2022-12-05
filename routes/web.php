@@ -23,7 +23,9 @@ Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name
 
 Route::get('/notes', [App\Http\Controllers\NoteController::class, 'index']);
 Route::get('/notes/{id}', [App\Http\Controllers\NoteController::class, 'show']);
-Route::get('/getchildren/{id}', [App\Http\Controllers\NoteController::class, 'getChildren']);
+Route::get('/note/{id/children/}', [App\Http\Controllers\NoteController::class, 'getChildren']);
+Route::get('note/{id}/parsedbody/', [App\Http\Controllers\NoteController::class, 'getParsedBody']);
+
 
 Route::post('/notes', [App\Http\Controllers\NoteController::class, 'create']);
 Route::put('/notes/{id}', [App\Http\Controllers\NoteController::class, 'update']);

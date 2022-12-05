@@ -107,7 +107,7 @@ const Note = () => {
         setSelectedId(note.id);
         setSelectedTitle(note.title);
         axios
-            .get(window.location.origin + "/getchildren/" + `${note.id}`)
+            .get(window.location.origin + `/note/${note.id}/children/`)
             .then((response) => setSelectedChildren(response.data))
             .catch((error) => console.log(error));
         setSelectedBody(note.body);
