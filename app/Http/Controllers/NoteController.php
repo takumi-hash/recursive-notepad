@@ -18,6 +18,10 @@ class NoteController extends Controller
     public function show($id){
         return Auth::user()->notes()->find($id);
     }
+
+    public function getChildren($id){
+        return Auth::user()->notes()->find($id)->allLevelsChildren()->get();
+    }
     
     public function create(Request $request){
         $new_note = Auth::user()->notes()->create([

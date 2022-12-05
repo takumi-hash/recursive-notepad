@@ -16,10 +16,17 @@ return new class extends Migration
         Schema::create('notes', function (Blueprint $table) {
             $table->id();
             $table->foreignId('user_id');
+            $table->foreignId('note_id')->nullable();
             $table->string('title');
-            $table->text('body');
+            $table->longtext('body');
             $table->timestamps();
+
+            $table->foreign('note_id')
+                ->references('id')
+                ->on('notes')
+                ->onDelete('set null');
         });
+        
     }
 
     /**

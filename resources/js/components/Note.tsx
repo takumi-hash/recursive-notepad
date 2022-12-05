@@ -4,6 +4,7 @@ import axios from "axios";
 type Note = {
     id: number;
     title: string;
+    children: Note[];
     body: string;
     created_at: Date;
     updated_at: Date;
@@ -14,6 +15,7 @@ const Note = () => {
         {
             id: null,
             title: "",
+            children: null,
             body: "",
         },
     ]);
@@ -35,6 +37,8 @@ const Note = () => {
         setSelectedTitle(e.target.value);
     };
 
+    const [selectedChildren, setSelectedChildren] = useState<Note[]>();
+
     const [selectedBody, setSelectedBody] = useState<string>("");
     const handleBodyChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         setSelectedBody(e.target.value);
@@ -43,6 +47,7 @@ const Note = () => {
     const clearSelectedNote = () => {
         setSelectedId(null);
         setSelectedTitle("");
+        setSelectedChildren(null);
         setSelectedBody("");
     };
 
@@ -81,7 +86,10 @@ const Note = () => {
     const selectNote = (note: Note) => {
         setSelectedId(note.id);
         setSelectedTitle(note.title);
-        setSelectedBody(note.body);
+        axios
+            .get(window.location.origin + "/getchildren/" + `${note.id}`)
+            .then((response) => setSelectedChildren(response.data))
+            .catch((error) => console.log(error));
     };
 
     const deleteNote = (id: number) => {
@@ -101,7 +109,9 @@ const Note = () => {
                 {notes.map((note) => (
                     <>
                         <div key={note.id} className="card mb-3">
-                            <div className="card-header">{note.title}</div>
+                            <div className="card-header">
+                                [{note.id}] {note.title}
+                            </div>
                             <div className="card-body">
                                 <p>{note.body}</p>
                                 <p> Create At: {note.created_at}</p>
@@ -136,6 +146,24 @@ const Note = () => {
                             onChange={handleTitleChange}
                             placeholder="タイトル"
                         />
+                    </div>
+                    <div className="mb-3">
+                        Child Notes
+                        <ul>
+                            {selectedChildren?.map((child) => (
+                                <>
+                                    <li>
+                                        {child.id}: {child.title}
+                                    </li>
+                                </>
+                            ))}
+                            {/* {JSON.stringify(selectedChildren)} */}
+                            {/* {(() => {
+                                if (selectedChildren != null) {
+                                    return JSON.stringify(selectedChildren);
+                                }
+                            })()} */}
+                        </ul>
                     </div>
                     <div className="mb-3">
                         <textarea
