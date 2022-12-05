@@ -4,10 +4,30 @@ import axios from "axios";
 type Note = {
     id: number;
     title: string;
-    children: Note[];
+    children?: Note[];
     body: string;
     created_at: Date;
     updated_at: Date;
+};
+
+type Props = {
+    data: Note;
+    level: number;
+};
+
+const RecursiveComponent = ({ data, level }: Props) => {
+    const indent = `${level ? "└".repeat(level) : ""}`;
+    return (
+        <>
+            <p>
+                {indent}
+                {data.title}
+                {data.children?.map((v) => {
+                    return <RecursiveComponent data={v} level={level + 1} />;
+                })}
+            </p>
+        </>
+    );
 };
 
 const Note = () => {
@@ -37,7 +57,7 @@ const Note = () => {
         setSelectedTitle(e.target.value);
     };
 
-    const [selectedChildren, setSelectedChildren] = useState<Note[]>();
+    const [selectedChildren, setSelectedChildren] = useState<Note[]>([]);
 
     const [selectedBody, setSelectedBody] = useState<string>("");
     const handleBodyChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -152,17 +172,12 @@ const Note = () => {
                         <ul>
                             {selectedChildren?.map((child) => (
                                 <>
-                                    <li>
-                                        {child.id}: {child.title}
-                                    </li>
+                                    <RecursiveComponent
+                                        data={child}
+                                        level={0}
+                                    />
                                 </>
                             ))}
-                            {/* {JSON.stringify(selectedChildren)} */}
-                            {/* {(() => {
-                                if (selectedChildren != null) {
-                                    return JSON.stringify(selectedChildren);
-                                }
-                            })()} */}
                         </ul>
                     </div>
                     <div className="mb-3">

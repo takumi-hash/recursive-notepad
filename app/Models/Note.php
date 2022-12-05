@@ -19,7 +19,7 @@ class Note extends Model
     }
 
     // this relationship will only return one level of child items
-    public function oneLevelChildren()
+    public function children()
     {
         return $this->hasMany(Note::class, 'note_id');
     }
@@ -27,7 +27,7 @@ class Note extends Model
     // This is method where we implement recursive relationship
     public function allLevelsChildren()
     {
-        return $this->hasMany(Note::class, 'note_id')->with('oneLevelChildren');
+        return $this->hasMany(Note::class, 'note_id')->with('children');
     }
 
 }
