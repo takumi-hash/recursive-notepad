@@ -9,3 +9,11 @@ $font-family-sans-serif: 'Arial', 'Hiragino Kaku Gothic ProN','Noto Sans JP', sa
 $font-family-serif: 'Times New Roman', 'Hiragino Mincho ProN', 'Noto Serif JP', serif;
 $font-size-base: 0.9rem;
 $line-height-base: 1.6;
+
+// Input
+
+$input-btn-focus-width: 1%;
+$input-focus-width: $input-btn-focus-width;
+
+$input-btn-focus-box-shadow: 0%;
+$input-focus-box-shadow: $input-btn-focus-box-shadow;
