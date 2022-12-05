@@ -110,6 +110,7 @@ const Note = () => {
             .get(window.location.origin + "/getchildren/" + `${note.id}`)
             .then((response) => setSelectedChildren(response.data))
             .catch((error) => console.log(error));
+        setSelectedBody(note.body);
     };
 
     const deleteNote = (id: number) => {
