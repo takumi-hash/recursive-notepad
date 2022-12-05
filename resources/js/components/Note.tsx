@@ -107,16 +107,16 @@ const Note = () => {
                                 <p> Create At: {note.created_at}</p>
                                 <p>Updated At: {note.updated_at}</p>
                                 <button
-                                    type="button"
                                     className="btn btn-outline-primary me-3"
                                     onClick={() => selectNote(note)}
+                                    type="button"
                                 >
                                     選択
                                 </button>
                                 <button
-                                    type="button"
                                     className="btn btn-outline-danger me-3"
                                     onClick={() => deleteNote(note.id)}
+                                    type="button"
                                 >
                                     削除
                                 </button>
@@ -154,6 +154,7 @@ const Note = () => {
                                 <button
                                     className="btn btn-success me-3"
                                     onClick={updateNote}
+                                    type="button"
                                 >
                                     更新
                                 </button>
@@ -163,6 +164,7 @@ const Note = () => {
                                 <button
                                     className="btn btn-primary me-3"
                                     onClick={createNote}
+                                    type="button"
                                 >
                                     新規保存
                                 </button>
@@ -172,6 +174,7 @@ const Note = () => {
                     <button
                         className="btn btn-outline-danger me-3"
                         onClick={() => deleteNote(selectedId)}
+                        type="button"
                     >
                         削除
                     </button>
