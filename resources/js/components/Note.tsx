@@ -10,22 +10,37 @@ type Note = {
     updated_at: Date;
 };
 
-type Props = {
+type RecursiveComponent = {
     data: Note;
     level: number;
+    onClickLink: any;
 };
 
-const RecursiveComponent = ({ data, level }: Props) => {
+const RecursiveComponent = ({
+    data,
+    level,
+    onClickLink,
+}: RecursiveComponent) => {
     const indent = `${level ? "".repeat(level) : ""}`;
     return (
         <>
             <li>
-                <a href="" onClick={(e) => e.preventDefault()}>
+                <a
+                    href=""
+                    onClick={(e) => {
+                        e.preventDefault();
+                        onClickLink(data);
+                    }}
+                >
                     {indent}
                     {data.title}
                     {data.children?.map((v) => {
                         return (
-                            <RecursiveComponent data={v} level={level + 1} />
+                            <RecursiveComponent
+                                data={v}
+                                level={level + 1}
+                                onClickLink={onClickLink}
+                            />
                         );
                     })}
                 </a>
@@ -180,6 +195,7 @@ const Note = () => {
                                     <RecursiveComponent
                                         data={child}
                                         level={0}
+                                        onClickLink={selectNote}
                                     />
                                 </>
                             ))}
