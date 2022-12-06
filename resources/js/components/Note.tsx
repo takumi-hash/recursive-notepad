@@ -16,16 +16,20 @@ type Props = {
 };
 
 const RecursiveComponent = ({ data, level }: Props) => {
-    const indent = `${level ? "└".repeat(level) : ""}`;
+    const indent = `${level ? "".repeat(level) : ""}`;
     return (
         <>
-            <p>
-                {indent}
-                {data.title}
-                {data.children?.map((v) => {
-                    return <RecursiveComponent data={v} level={level + 1} />;
-                })}
-            </p>
+            <li>
+                <a href="" onClick={(e) => e.preventDefault()}>
+                    {indent}
+                    {data.title}
+                    {data.children?.map((v) => {
+                        return (
+                            <RecursiveComponent data={v} level={level + 1} />
+                        );
+                    })}
+                </a>
+            </li>
         </>
     );
 };
