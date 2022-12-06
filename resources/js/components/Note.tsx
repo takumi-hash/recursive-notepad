@@ -219,7 +219,7 @@ const Note = () => {
                     </div>
                     <div className="mb-3">
                         <p>Preview</p>
-                        <p className="text=muted">{previewBody}</p>
+                        <p className="text-muted">{previewBody}</p>
                     </div>
                     {(() => {
                         if (selectedId) {
