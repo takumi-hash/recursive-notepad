@@ -20,7 +20,7 @@ class NoteController extends Controller
     }
 
     public function getChildren($id){
-        return Auth::user()->notes()->find($id)->allLevelsChildren()->get();
+        return Auth::user()->notes()->find($id)->children()->get();
     }
 
     public function getParsedBody($id){
