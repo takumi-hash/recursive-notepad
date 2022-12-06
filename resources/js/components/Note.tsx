@@ -90,6 +90,7 @@ const Note = () => {
         setSelectedTitle("");
         setSelectedChildren(null);
         setSelectedBody("");
+        setPreviewBody("");
     };
 
     const createNote = (): void => {
