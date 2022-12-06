@@ -25,36 +25,33 @@ class NoteController extends Controller
 
     public function getParsedBody($id){
 
-        $flattened = \Arr::dot(Auth::user()->notes()->find($id)->allLevelsChildren()->get()->toArray());
-        $noteIdCount = array_filter(
-            $flattened,
-            function ($key) {
-                return preg_match('/.*\.id$/', $key); //regular expression to match key name
-            },
-            ARRAY_FILTER_USE_KEY
-        );
+        // $flattened = \Arr::dot(Auth::user()->notes()->find($id)->allLevelsChildren()->get()->toArray());
+        // $noteIdCount = array_filter(
+        //     $flattened,
+        //     function ($key) {
+        //         return preg_match('/.*\.id$/', $key); //regular expression to match key name
+        //     },
+        //     ARRAY_FILTER_USE_KEY
+        // );
         // $noteIdCount = count($noteIdCount);
 
 
         $parsedBody = Auth::user()->notes()->find($id)->body;
-        while(preg_match_all('/%%[\d]+%%/', $parsedBody, $res)> 0) {
+        while(preg_match('/%%[\d]+?%%/', $parsedBody, $res)> 0) {
         // foreach($noteIdCount as $value){
-            preg_match('/%%[\d]+%%/', $parsedBody, $noteIdArr);
+            preg_match_all('/%%[\d]+%%/', $parsedBody, $noteIdArr, PREG_PATTERN_ORDER);
             $dict = array();
-            foreach($noteIdArr as $noteIdStr){
+            foreach($noteIdArr[0] as $noteIdStr){
                 $noteId = str_replace('%%', '', $noteIdStr);
                 $body = Auth::user()->notes()->find($noteId)->body;
                 $dict = $dict + array($noteId=>$body);
             }
-            unset($item);
 
-            $parsedBody = Auth::user()->notes()->find($id)->body;
-                foreach($dict as $key => $item){
-                    $pattern = '%%'.$key.'%%';
-                    $replacement = '[引用ここから]'.$dict[$key].'[引用ここまで]';
-                    $parsedBody = str_replace($pattern, $replacement, $parsedBody);            
-                }
-                unset($item);
+            foreach($dict as $key => $item){
+                $pattern = '%%'.$key.'%%';
+                $replacement = '[引用ここから]'.$dict[$key].'[引用ここまで]';
+                $parsedBody = str_replace($pattern, $replacement, $parsedBody);            
+            }
         }
         return $parsedBody;
     }
