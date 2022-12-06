@@ -56,6 +56,7 @@ const Note = () => {
             title: "",
             children: null,
             body: "",
+            previewBody: "",
         },
     ]);
 
@@ -82,6 +83,7 @@ const Note = () => {
     const handleBodyChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         setSelectedBody(e.target.value);
     };
+    const [previewBody, setPreviewBody] = useState<string>("");
 
     const clearSelectedNote = () => {
         setSelectedId(null);
@@ -130,6 +132,10 @@ const Note = () => {
             .then((response) => setSelectedChildren(response.data))
             .catch((error) => console.log(error));
         setSelectedBody(note.body);
+        axios
+            .get(window.location.origin + `/note/${note.id}/parsedbody/`)
+            .then((response) => setPreviewBody(response.data))
+            .catch((error) => console.log(error));
     };
 
     const deleteNote = (id: number) => {
@@ -211,7 +217,10 @@ const Note = () => {
                             placeholder="本文"
                         ></textarea>
                     </div>
-                    <br />
+                    <div className="mb-3">
+                        <p>Preview</p>
+                        <p className="text=muted">{previewBody}</p>
+                    </div>
                     {(() => {
                         if (selectedId) {
                             return (
