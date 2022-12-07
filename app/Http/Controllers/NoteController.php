@@ -10,7 +10,15 @@ class NoteController extends Controller
     public function __construct(){
         $this->middleware('auth');
     }
-
+    
+    public function hasSelfReference($text, $id){
+        if(preg_match('/%%'.$id.'%%/', $text, $res)> 0){
+            return true;
+        } else {
+            return false;
+        }
+    }
+    
     public function index(Request $request){
         return Auth::user()->notes()->orderBy('updated_at', 'desc')->get();
     }
@@ -25,20 +33,10 @@ class NoteController extends Controller
 
     public function getParsedBody($id){
 
-        // $flattened = \Arr::dot(Auth::user()->notes()->find($id)->allLevelsChildren()->get()->toArray());
-        // $noteIdCount = array_filter(
-        //     $flattened,
-        //     function ($key) {
-        //         return preg_match('/.*\.id$/', $key); //regular expression to match key name
-        //     },
-        //     ARRAY_FILTER_USE_KEY
-        // );
-        // $noteIdCount = count($noteIdCount);
-
-
         $parsedBody = Auth::user()->notes()->find($id)->body;
-        while(preg_match('/%%[\d]+?%%/', $parsedBody, $res)> 0) {
-        // foreach($noteIdCount as $value){
+        $i = 0;
+        $looplimit = 100;
+        while( $i<$looplimit && preg_match('/%%[\d]+?%%/', $parsedBody, $res)> 0) {
             preg_match_all('/%%[\d]+%%/', $parsedBody, $noteIdArr, PREG_PATTERN_ORDER);
             $dict = array();
             foreach($noteIdArr[0] as $noteIdStr){
@@ -52,11 +50,13 @@ class NoteController extends Controller
                 $replacement = '[引用ここから]'.$dict[$key].'[引用ここまで]';
                 $parsedBody = str_replace($pattern, $replacement, $parsedBody);            
             }
+            ++$i;
         }
         return $parsedBody;
     }
     
     public function create(Request $request){
+        // TODO: add filtering onley existing id.
         $new_note = Auth::user()->notes()->create([
             'title'=>$request->title,
             'body'=>$request->body,
@@ -75,6 +75,11 @@ class NoteController extends Controller
     }
 
     public function update(Request $request, $id){
+        if($this->hasSelfReference($request->body,$id)){
+            return response()->json([
+                'message' => 'Self reference is forbidden.',
+            ], 500);
+        }
         $note = Auth::user()->notes()->find($id);
         $note->title = $request->title;
         $note->body = $request->body;

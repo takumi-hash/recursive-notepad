@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import RecursiveComponent from "./RecursiveComponent";
 import axios from "axios";
 
 type Note = {
@@ -8,45 +9,6 @@ type Note = {
     body: string;
     created_at: Date;
     updated_at: Date;
-};
-
-type RecursiveComponent = {
-    data: Note;
-    level: number;
-    onClickLink: any;
-};
-
-const RecursiveComponent = ({
-    data,
-    level,
-    onClickLink,
-}: RecursiveComponent) => {
-    const indent = `${level ? "".repeat(level) : ""}`;
-    return (
-        <>
-            <li>
-                <a
-                    href=""
-                    onClick={(e) => {
-                        e.preventDefault();
-                        onClickLink(data);
-                    }}
-                >
-                    {indent}
-                    {data.title}
-                    {data.children?.map((v) => {
-                        return (
-                            <RecursiveComponent
-                                data={v}
-                                level={level + 1}
-                                onClickLink={onClickLink}
-                            />
-                        );
-                    })}
-                </a>
-            </li>
-        </>
-    );
 };
 
 const Note = () => {
