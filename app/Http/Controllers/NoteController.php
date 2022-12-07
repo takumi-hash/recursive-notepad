@@ -18,7 +18,14 @@ class NoteController extends Controller
             return false;
         }
     }
-    
+
+    public function countRecursiveChildren($note_id)
+    {
+        $recursiveChildren = Auth::user()->notes()->find($note_id)->withCount('recursiveChildren');
+        $count = $recursiveChildren->sum();
+        return $count;
+    }
+
     public function index(Request $request){
         return Auth::user()->notes()->orderBy('updated_at', 'desc')->get();
     }
@@ -32,6 +39,9 @@ class NoteController extends Controller
     }
 
     public function getParsedBody($id){
+
+        // App\Models\Note::find(1)->recursiveChildren()->get()->first()->pivot->parent_id;
+        dump($recursiveChildren);
 
         $parsedBody = Auth::user()->notes()->find($id)->body;
         $i = 0;

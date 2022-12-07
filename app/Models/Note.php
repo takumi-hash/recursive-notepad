@@ -27,8 +27,11 @@ class Note extends Model
     // This is method where we implement recursive relationship
     public function recursiveChildren()
     {
-        // return $this->hasMany(Note::class, 'note_id')->with('children');
         return $this->belongsToMany(Note::class, 'parent_child', 'parent_id', 'child_id')->with('children');
     }
-
+    
+    public function countRecursiveChildren()
+    {
+        return $this->withCount('recursiveChildren')->pluck("recursive_children_count")->sum();
+    }
 }

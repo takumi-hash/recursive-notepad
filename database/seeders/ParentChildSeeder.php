@@ -20,12 +20,17 @@ class ParentChildSeeder extends Seeder
             'created_at' => new \DateTime(),
         ]);
         \DB::table('parent_child')->insert([
+            'parent_id' => 1,
+            'child_id' => 3,
+            'created_at' => new \DateTime(),
+        ]);
+        \DB::table('parent_child')->insert([
             'parent_id' => 2,
             'child_id' => 3,
             'created_at' => new \DateTime(),
         ]);
         \DB::table('parent_child')->insert([
-            'parent_id' => 1,
+            'parent_id' => 3,
             'child_id' => 4,
             'created_at' => new \DateTime(),
         ]);
