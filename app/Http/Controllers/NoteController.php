@@ -46,7 +46,7 @@ class NoteController extends Controller
 
         foreach($dictionary as $key => $item){
                 $pattern = '%%'.$key.'%%';
-                $replacement = '[引用ここから]'.$dictionary[$key].'[引用ここまで]';
+                $replacement = '<mark>'.$dictionary[$key].'</mark>';
                 $parsedBody = str_replace($pattern, $replacement, $parsedBody);            
         }
         return $parsedBody;

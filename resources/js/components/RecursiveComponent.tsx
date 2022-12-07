@@ -24,6 +24,7 @@ const RecursiveComponent = ({
                     }}
                 >
                     {indent}
+                    {"%%" + data.id + "%% = "}
                     {data.title}
                 </a>
                 {data.children?.map((v) => {

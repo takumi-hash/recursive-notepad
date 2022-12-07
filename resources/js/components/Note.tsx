@@ -1,12 +1,15 @@
 import React, { useEffect, useState } from "react";
 import RecursiveComponent from "./RecursiveComponent";
 import axios from "axios";
+import sanitizeHtml from "sanitize-html";
 
 type Note = {
     id: number;
     title: string;
     children?: Note[];
     body: string;
+    previewBody: string;
+    cleanHtml: string;
     created_at: Date;
     updated_at: Date;
 };
@@ -19,6 +22,7 @@ const Note = () => {
             children: null,
             body: "",
             previewBody: "",
+            cleanHtml: "",
         },
     ]);
 
@@ -46,6 +50,7 @@ const Note = () => {
         setSelectedBody(e.target.value);
     };
     const [previewBody, setPreviewBody] = useState<string>("");
+    const [cleanHtml, setCleanHtml] = useState<string>("");
 
     const clearSelectedNote = () => {
         setSelectedId(null);
@@ -53,6 +58,7 @@ const Note = () => {
         setSelectedChildren(null);
         setSelectedBody("");
         setPreviewBody("");
+        setCleanHtml("");
     };
 
     const createNote = (): void => {
@@ -99,6 +105,14 @@ const Note = () => {
             .get(window.location.origin + `/note/${note.id}/parsedbody/`)
             .then((response) => setPreviewBody(response.data))
             .catch((error) => console.log(error));
+        const cleanHtml = sanitizeHtml(note.previewBody, {
+            allowedTags: ["mark"],
+            allowedAttributes: {
+                mark: [""],
+            },
+            allowedIframeHostnames: [""],
+        });
+        setCleanHtml(cleanHtml);
     };
 
     const deleteNote = (id: number) => {
@@ -180,6 +194,11 @@ const Note = () => {
                     <div className="mb-3">
                         <p>Preview</p>
                         <p className="text-muted">{previewBody}</p>
+                        <div
+                            dangerouslySetInnerHTML={{
+                                __html: cleanHtml,
+                            }}
+                        ></div>
                     </div>
                     {(() => {
                         if (selectedId) {
