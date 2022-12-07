@@ -16,13 +16,13 @@ class NoteSeeder extends Seeder
     {
         \DB::table('notes')->insert([
             'title' => '風の歌を聴け',
-            'body' => 'これはノート1です。',
+            'body' => 'これはノート1です。%%2%% %%3%%',
             'user_id' => 1,
             'created_at' => new \DateTime(),
         ]);
         \DB::table('notes')->insert([
             'title' => '羊をめぐる冒険',
-            'body' => 'これはノート2です。',
+            'body' => 'これはノート2です。%%4%%',
             'user_id' => 1,
             'created_at' => new \DateTime(),
         ]);

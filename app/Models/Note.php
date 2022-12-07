@@ -29,7 +29,12 @@ class Note extends Model
     {
         return $this->belongsToMany(Note::class, 'parent_child', 'parent_id', 'child_id')->with('children');
     }
-    
+
+    public function getRecursiveChildrenDictionary()
+    {
+        return $this->withCount('recursiveChildren')->pluck("body","id");
+    }
+
     public function countRecursiveChildren()
     {
         return $this->withCount('recursiveChildren')->pluck("recursive_children_count")->sum();

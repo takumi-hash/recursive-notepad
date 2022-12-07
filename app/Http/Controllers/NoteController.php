@@ -40,27 +40,14 @@ class NoteController extends Controller
 
     public function getParsedBody($id){
 
-        // App\Models\Note::find(1)->recursiveChildren()->get()->first()->pivot->parent_id;
-        dump($recursiveChildren);
+        $parentNote = Auth::user()->notes()->find($id);
+        $parsedBody = $parentNote->body;
+        $dictionary = $parentNote->getRecursiveChildrenDictionary();
 
-        $parsedBody = Auth::user()->notes()->find($id)->body;
-        $i = 0;
-        $looplimit = 100;
-        while( $i<$looplimit && preg_match('/%%[\d]+?%%/', $parsedBody, $res)> 0) {
-            preg_match_all('/%%[\d]+%%/', $parsedBody, $noteIdArr, PREG_PATTERN_ORDER);
-            $dict = array();
-            foreach($noteIdArr[0] as $noteIdStr){
-                $noteId = str_replace('%%', '', $noteIdStr);
-                $body = Auth::user()->notes()->find($noteId)->body;
-                $dict = $dict + array($noteId=>$body);
-            }
-
-            foreach($dict as $key => $item){
+        foreach($dictionary as $key => $item){
                 $pattern = '%%'.$key.'%%';
-                $replacement = '[引用ここから]'.$dict[$key].'[引用ここまで]';
+                $replacement = '[引用ここから]'.$dictionary[$key].'[引用ここまで]';
                 $parsedBody = str_replace($pattern, $replacement, $parsedBody);            
-            }
-            ++$i;
         }
         return $parsedBody;
     }
