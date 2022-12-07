@@ -13,14 +13,12 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('notes', function (Blueprint $table) {
+        Schema::create('parent_child', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('user_id');
-            $table->string('title');
-            $table->longtext('body');
+            $table->foreignId('parent_id')->references('id')->on('notes')->cascadeOnUpdate()->cascadeOnDelete();
+            $table->foreignId('child_id')->references('id')->on('notes')->cascadeOnUpdate()->cascadeOnDelete();
             $table->timestamps();
         });
-        
     }
 
     /**
@@ -30,6 +28,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('notes');
+        Schema::dropIfExists('parent_child');
     }
 };

@@ -21,13 +21,14 @@ class Note extends Model
     // this relationship will only return one level of child items
     public function children()
     {
-        return $this->hasMany(Note::class, 'note_id');
+        return $this->belongsToMany(Note::class, 'parent_child', 'parent_id', 'child_id');
     }
 
     // This is method where we implement recursive relationship
-    public function allLevelsChildren()
+    public function recursiveChildren()
     {
-        return $this->hasMany(Note::class, 'note_id')->with('children');
+        // return $this->hasMany(Note::class, 'note_id')->with('children');
+        return $this->belongsToMany(Note::class, 'parent_child', 'parent_id', 'child_id')->with('children');
     }
 
 }
