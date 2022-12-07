@@ -35,14 +35,14 @@ class NoteController extends Controller
     }
 
     public function getChildren($id){
-        return Auth::user()->notes()->find($id)->children()->get();
+        return Auth::user()->notes()->find($id)->recursiveChildren()->get();
     }
 
     public function getParsedBody($id){
 
         $parentNote = Auth::user()->notes()->find($id);
         $parsedBody = $parentNote->body;
-        $dictionary = $parentNote->getRecursiveChildrenDictionary();
+        $dictionary = $parentNote->recursiveChildrenDictionary();
 
         foreach($dictionary as $key => $item){
                 $pattern = '%%'.$key.'%%';

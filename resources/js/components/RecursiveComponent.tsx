@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
 import Note from "./Note";
-import axios from "axios";
 
 type RecursiveComponent = {
     data: Note;
@@ -13,10 +12,10 @@ const RecursiveComponent = ({
     level,
     onClickLink,
 }: RecursiveComponent) => {
-    const indent = `${level ? "".repeat(level) : ""}`;
+    const indent = `${"".repeat(level) + ""}`;
     return (
         <>
-            <li>
+            <div className={"p-2 border ms-" + level * 4}>
                 <a
                     href=""
                     onClick={(e) => {
@@ -26,17 +25,17 @@ const RecursiveComponent = ({
                 >
                     {indent}
                     {data.title}
-                    {data.children?.map((v) => {
-                        return (
-                            <RecursiveComponent
-                                data={v}
-                                level={level + 1}
-                                onClickLink={onClickLink}
-                            />
-                        );
-                    })}
                 </a>
-            </li>
+                {data.children?.map((v) => {
+                    return (
+                        <RecursiveComponent
+                            data={v}
+                            level={level + 1}
+                            onClickLink={onClickLink}
+                        />
+                    );
+                })}
+            </div>
         </>
     );
 };

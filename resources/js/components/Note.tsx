@@ -146,7 +146,7 @@ const Note = () => {
             </div>
             <div className="col-md-8">
                 <form action="">
-                    <div className="mb-3">
+                    <div className="">
                         <input
                             type="text"
                             id="titleText"
@@ -156,19 +156,16 @@ const Note = () => {
                             placeholder="タイトル"
                         />
                     </div>
-                    <div className="mb-3">
-                        Child Notes
-                        <ul>
-                            {selectedChildren?.map((child) => (
-                                <>
-                                    <RecursiveComponent
-                                        data={child}
-                                        level={0}
-                                        onClickLink={selectNote}
-                                    />
-                                </>
-                            ))}
-                        </ul>
+                    <div className="mb-3 ms-4 d-grid bg-light">
+                        {selectedChildren?.map((child) => (
+                            <>
+                                <RecursiveComponent
+                                    data={child}
+                                    level={0}
+                                    onClickLink={selectNote}
+                                />
+                            </>
+                        ))}
                     </div>
                     <div className="mb-3">
                         <textarea
