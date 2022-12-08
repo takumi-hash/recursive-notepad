@@ -97,12 +97,12 @@ const Note = () => {
         setSelectedId(note.id);
         setSelectedTitle(note.title);
         axios
-            .get(window.location.origin + `/note/${note.id}/children/`)
+            .get(window.location.origin + `/notes/${note.id}/children/`)
             .then((response) => setSelectedChildren(response.data))
             .catch((error) => console.log(error));
         setSelectedBody(note.body);
         axios
-            .get(window.location.origin + `/note/${note.id}/parsedbody/`)
+            .get(window.location.origin + `/notes/${note.id}/parsedbody/`)
             .then((response) => setPreviewBody(response.data))
             .catch((error) => console.log(error));
         const cleanHtml = sanitizeHtml(note.previewBody, {
