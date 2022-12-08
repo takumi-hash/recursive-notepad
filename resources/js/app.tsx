@@ -44,14 +44,10 @@ function App() {
                     })}
                 </div>
                 <div className="col-md-8">
-                    {selectedNote ? (
-                        <Editor
-                            selectedNoteId={selectedNote.id}
-                            onUpdateOrDeleteNote={() => onUpdateOrDeleteNote()}
-                        />
-                    ) : (
-                        <p>false</p>
-                    )}
+                    <Editor
+                        selectedNoteId={selectedNote.id}
+                        onUpdateOrDeleteNote={() => onUpdateOrDeleteNote()}
+                    />
                 </div>
             </div>
         </>

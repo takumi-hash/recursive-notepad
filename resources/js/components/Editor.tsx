@@ -158,7 +158,7 @@ export const Editor: React.FC<Props> = ({
                             <button
                                 className="btn btn-primary me-3"
                                 onClick={createNote}
-                                type="button"
+                                type="submit"
                             >
                                 新規保存
                             </button>
