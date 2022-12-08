@@ -19,13 +19,6 @@ class NoteController extends Controller
         }
     }
 
-    public function countRecursiveChildren($note_id)
-    {
-        $recursiveChildren = Auth::user()->notes()->find($note_id)->withCount('recursiveChildren');
-        $count = $recursiveChildren->sum();
-        return $count;
-    }
-
     public function index(Request $request){
         return Auth::user()->notes()->orderBy('updated_at', 'desc')->get();
     }
