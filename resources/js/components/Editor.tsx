@@ -3,13 +3,18 @@ import RecursiveComponent from "./RecursiveComponent";
 import axios from "axios";
 
 import { Note } from "../types/Note";
-import { getChildren, getSanitizedPreview } from "../lib/notes";
+import { getNoteDetail, getChildren, getSanitizedPreview } from "../lib/notes";
 
 type Props = {
-    selectedNote: Note;
+    selectedNoteId: number;
+    onUpdateOrDeleteNote: () => void;
 };
 
-export const Editor: React.FC<Props> = ({ selectedNote }: Props) => {
+export const Editor: React.FC<Props> = ({
+    selectedNoteId,
+    onUpdateOrDeleteNote,
+}: Props) => {
+    const [editingNote, setEditingNote] = useState<Note>();
     const [id, setId] = useState<number>();
     const [title, setTitle] = useState<string>("");
     const handleTitleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -24,27 +29,34 @@ export const Editor: React.FC<Props> = ({ selectedNote }: Props) => {
 
     useEffect(() => {
         setupEditor();
-    }, [selectedNote]);
+    }, [selectedNoteId]);
 
     const setupEditor = async () => {
-        setId(selectedNote?.id);
-        setTitle(selectedNote.title);
+        setId(selectedNoteId);
 
-        const childrenData = await getChildren(selectedNote.id);
+        const noteData = await getNoteDetail(selectedNoteId);
+        setEditingNote(noteData);
+        setTitle(noteData.title);
+        setBody(noteData.body);
+
+        const childrenData = await getChildren(selectedNoteId);
         setChildren(childrenData);
 
-        setBody(selectedNote.body);
-
-        const previewData = await getSanitizedPreview(selectedNote.id);
+        const previewData = await getSanitizedPreview(selectedNoteId);
         setCleanHtml(previewData);
     };
 
     const onSelectChild = () => {
-        selectedNote;
+        // selectedNote;
     };
 
-    const clearSelectedNote = () => {
-        setupEditor();
+    const clearEditor = () => {
+        setId(null);
+        setEditingNote(null);
+        setTitle("");
+        setBody("");
+        setChildren("");
+        setCleanHtml("");
     };
 
     const createNote = (): void => {
@@ -54,10 +66,7 @@ export const Editor: React.FC<Props> = ({ selectedNote }: Props) => {
                 body: body,
             })
             .then((response) => {
-                setupEditor();
-            })
-            .then(() => {
-                clearSelectedNote();
+                console.log("Create request snet.");
             })
             .catch((error) => {
                 console.log(error);
@@ -71,8 +80,9 @@ export const Editor: React.FC<Props> = ({ selectedNote }: Props) => {
                 body: body,
             })
             .then((response) => {
+                console.log("Update sent.");
+                onUpdateOrDeleteNote();
                 setupEditor();
-                clearSelectedNote();
             })
             .catch((error) => {
                 console.log(error);
@@ -84,8 +94,8 @@ export const Editor: React.FC<Props> = ({ selectedNote }: Props) => {
             .delete(window.location.origin + "/notes/" + `${id}`)
             .then((response) => {
                 console.log(response);
-                // setNotes(notes.filter((note) => note.id !== id));
-                clearSelectedNote();
+                clearEditor();
+                onUpdateOrDeleteNote();
             })
             .catch((error) => console.log(error));
     };
@@ -98,7 +108,7 @@ export const Editor: React.FC<Props> = ({ selectedNote }: Props) => {
                         type="text"
                         id="titleText"
                         className="form-control"
-                        value={selectedNote.title}
+                        value={title}
                         onChange={handleTitleChange}
                         placeholder="タイトル"
                     />
@@ -119,8 +129,8 @@ export const Editor: React.FC<Props> = ({ selectedNote }: Props) => {
                         className="form-control"
                         id="bodyText"
                         rows={10}
-                        value={selectedNote.body}
-                        onChange={() => handleBodyChange}
+                        value={body}
+                        onChange={handleBodyChange}
                         placeholder="本文"
                     ></textarea>
                 </div>
@@ -133,7 +143,7 @@ export const Editor: React.FC<Props> = ({ selectedNote }: Props) => {
                     ></div>
                 </div>
                 {(() => {
-                    if (selectedNote.id) {
+                    if (selectedNoteId) {
                         return (
                             <button
                                 className="btn btn-success me-3"
@@ -157,7 +167,7 @@ export const Editor: React.FC<Props> = ({ selectedNote }: Props) => {
                 })()}
                 <button
                     className="btn btn-outline-danger me-3"
-                    onClick={() => deleteNote(selectedNote.id)}
+                    onClick={() => deleteNote(selectedNoteId)}
                     type="button"
                 >
                     削除

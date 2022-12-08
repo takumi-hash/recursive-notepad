@@ -19,10 +19,25 @@ export const getMyNotes = async () => {
     return notes;
 }
 
-export const getChildren = async (note_id: number) => {
+export const getNoteDetail = async (noteId: number) => {
     const options = {
         method: 'GET',
-        url: window.location.origin +'/notes/'+note_id+'/children/',
+        url: window.location.origin +'/notes/'+noteId,
+    };
+
+    const notes: Note = await axios.request(options).then(function (response) {
+        return response.data;
+    }).catch(function (error) {
+        console.error(error);
+    });
+    
+    return notes;
+}
+
+export const getChildren = async (noteId: number) => {
+    const options = {
+        method: 'GET',
+        url: window.location.origin +'/notes/'+noteId+'/children/',
     };
 
     const notes: Note[] = await axios.request(options).then(function (response) {
@@ -34,10 +49,10 @@ export const getChildren = async (note_id: number) => {
     return notes;
 }
 
-export const getSanitizedPreview = async (note_id: number) => {
+export const getSanitizedPreview = async (noteId: number) => {
     const options = {
         method: 'GET',
-        url: window.location.origin +'/notes/'+note_id+'/parsedbody/',
+        url: window.location.origin +'/notes/'+noteId+'/parsedbody/',
     };
 
     const parsedbody: string = await axios.request(options).then(function (response) {

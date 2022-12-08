@@ -9,7 +9,7 @@ import { getMyNotes } from "./lib/notes";
 
 function App() {
     const [notes, setNotes] = useState<Note[]>([]);
-    const [selectedNote, setSelectedNote] = useState<Note>();
+    const [selectedNote, setSelectedNote] = useState<Note>(0);
 
     useEffect(() => {
         getNotes();
@@ -22,6 +22,10 @@ function App() {
 
     const onSelectNote = (note: Note) => {
         setSelectedNote(note);
+    };
+
+    const onUpdateOrDeleteNote = () => {
+        getNotes();
     };
 
     return (
@@ -41,7 +45,10 @@ function App() {
                 </div>
                 <div className="col-md-8">
                     {selectedNote ? (
-                        <Editor selectedNote={selectedNote} />
+                        <Editor
+                            selectedNoteId={selectedNote.id}
+                            onUpdateOrDeleteNote={() => onUpdateOrDeleteNote()}
+                        />
                     ) : (
                         <p>false</p>
                     )}
