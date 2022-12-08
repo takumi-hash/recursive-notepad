@@ -1,18 +1,16 @@
 import React, { useEffect, useState } from "react";
 import RecursiveComponent from "./RecursiveComponent";
 import axios from "axios";
-import sanitizeHtml from "sanitize-html";
-import Note from "./NotesList";
 
-type Editor = {
-    data: Note;
-    onClinkChild: any;
+import { Note } from "../types/Note";
+import { getChildren, getSanitizedPreview } from "../lib/notes";
+
+type Props = {
+    selectedNote: Note;
 };
 
-const Editor = (selectedNote: Note, setSelectedNote) => {
-    const [editor, setEditor] = useState<Editor>();
-    const [preview, setPreview] = useState<string>("");
-    const [id, setId] = useState<string>("");
+export const Editor: React.FC<Props> = ({ selectedNote }: Props) => {
+    const [id, setId] = useState<number>();
     const [title, setTitle] = useState<string>("");
     const handleTitleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         setTitle(e.target.value);
@@ -25,36 +23,28 @@ const Editor = (selectedNote: Note, setSelectedNote) => {
     const [cleanHtml, setCleanHtml] = useState<string>("");
 
     useEffect(() => {
-        axios
-            .get(window.location.origin + `/notes/${selectedNote.id}`)
-            .then((response) => setEditor(response.data))
-            .catch((error) => console.log(error));
+        setupEditor();
+    }, [selectedNote]);
 
-        axios
-            .get(
-                window.location.origin + `/notes/${selectedNote.id}/parsedbody/`
-            )
-            .then((response) => setPreview(response.data))
-            .catch((error) => console.log(error));
-        const cleanHtml = sanitizeHtml(preview);
-        setCleanHtml(cleanHtml);
+    const setupEditor = async () => {
+        setId(selectedNote?.id);
+        setTitle(selectedNote.title);
 
-        axios
-            .get(window.location.origin + `/notes/${selectedNote.id}/children/`)
-            .then((response) => setChildren(response.data))
-            .catch((error) => console.log(error));
-    }, [selectedNote, preview]);
+        const childrenData = await getChildren(selectedNote.id);
+        setChildren(childrenData);
+
+        setBody(selectedNote.body);
+
+        const previewData = await getSanitizedPreview(selectedNote.id);
+        setCleanHtml(previewData);
+    };
 
     const onSelectChild = () => {
-        setSelectedNote();
-        axios
-            .get(window.location.origin + `/notes/${selectedNote.id}`)
-            .then((response) => setEditor(response.data))
-            .catch((error) => console.log(error));
+        selectedNote;
     };
 
     const clearSelectedNote = () => {
-        setEditor(null);
+        setupEditor();
     };
 
     const createNote = (): void => {
@@ -64,7 +54,7 @@ const Editor = (selectedNote: Note, setSelectedNote) => {
                 body: body,
             })
             .then((response) => {
-                setEditor(response.data);
+                setupEditor();
             })
             .then(() => {
                 clearSelectedNote();
@@ -81,7 +71,7 @@ const Editor = (selectedNote: Note, setSelectedNote) => {
                 body: body,
             })
             .then((response) => {
-                setEditor(response.data);
+                setupEditor();
                 clearSelectedNote();
             })
             .catch((error) => {
@@ -128,15 +118,14 @@ const Editor = (selectedNote: Note, setSelectedNote) => {
                     <textarea
                         className="form-control"
                         id="bodyText"
-                        rows="10"
+                        rows={10}
                         value={selectedNote.body}
-                        onChange={handleBodyChange}
+                        onChange={() => handleBodyChange}
                         placeholder="本文"
                     ></textarea>
                 </div>
                 <div className="mb-3">
                     <p>Preview</p>
-                    <p className="text-muted">{preview}</p>
                     <div
                         dangerouslySetInnerHTML={{
                             __html: cleanHtml,
@@ -168,7 +157,7 @@ const Editor = (selectedNote: Note, setSelectedNote) => {
                 })()}
                 <button
                     className="btn btn-outline-danger me-3"
-                    onClick={() => deleteNote(id)}
+                    onClick={() => deleteNote(selectedNote.id)}
                     type="button"
                 >
                     削除

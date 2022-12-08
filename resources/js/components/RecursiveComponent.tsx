@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import Note from "./NotesList";
+import { Note } from "../types/Note";
 
 type RecursiveComponent = {
     data: Note;
