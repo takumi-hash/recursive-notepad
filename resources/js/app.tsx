@@ -39,6 +39,7 @@ function App() {
     };
 
     const onDeleteNote = () => {
+        getNotes();
         setSelectedNote(emptyNote);
     };
 

@@ -24,7 +24,7 @@ export const Editor: React.FC<Props> = ({
     };
     const [children, setChildren] = useState<Note[]>([]);
     const [body, setBody] = useState<string>("");
-    const handleBodyChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const handleBodyChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
         setBody(e.target.value);
     };
     const [cleanHtml, setCleanHtml] = useState<string>("");
