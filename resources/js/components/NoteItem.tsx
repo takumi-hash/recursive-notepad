@@ -6,7 +6,7 @@ import { deleteNote } from "../lib/notes";
 type Props = {
     note: Note;
     onSelectNote: () => void;
-    onDeleteNote: () => void;
+    getNotes: () => void;
 };
 
 export const NoteItem: React.FC<Props> = ({
