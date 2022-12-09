@@ -1,6 +1,5 @@
 import "./bootstrap";
 import React, { useEffect, useState } from "react";
-import axios from "axios";
 import ReactDOM from "react-dom/client";
 import Editor from "./components/Editor";
 import NoteItem from "./components/NoteItem";
@@ -24,8 +23,18 @@ function App() {
         setSelectedNote(note);
     };
 
-    const onUpdateOrDeleteNote = () => {
+    const onUpdateNote = () => {
         getNotes();
+    };
+
+    const onDeleteNote = () => {
+        getNotes();
+        const emptyNote: Note = {
+            id: undefined,
+            title: "",
+            body: "",
+        };
+        setSelectedNote(emptyNote);
     };
 
     return (
@@ -45,8 +54,10 @@ function App() {
                 </div>
                 <div className="col-md-8">
                     <Editor
+                        key={selectedNote.id}
                         selectedNoteId={selectedNote.id}
-                        onUpdateOrDeleteNote={() => onUpdateOrDeleteNote()}
+                        onUpdateNote={() => onUpdateNote()}
+                        onDeleteNote={() => onDeleteNote()}
                     />
                 </div>
             </div>
@@ -54,5 +65,5 @@ function App() {
     );
 }
 
-const root = ReactDOM.createRoot(document.getElementById("contents"));
+const root = ReactDOM.createRoot(document.getElementById("contents")!);
 root.render(<App />);

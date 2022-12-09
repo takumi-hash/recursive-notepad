@@ -30,6 +30,7 @@ const RecursiveComponent = ({
                 {data.children?.map((v) => {
                     return (
                         <RecursiveComponent
+                            key={data.id}
                             data={v}
                             level={level + 1}
                             onClickLink={onClickLink}

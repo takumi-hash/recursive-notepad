@@ -7,12 +7,14 @@ import { getNoteDetail, getChildren, getSanitizedPreview } from "../lib/notes";
 
 type Props = {
     selectedNoteId: number;
-    onUpdateOrDeleteNote: () => void;
+    onUpdateNote: () => void;
+    onDeleteNote: () => void;
 };
 
 export const Editor: React.FC<Props> = ({
     selectedNoteId,
-    onUpdateOrDeleteNote,
+    onUpdateNote,
+    onDeleteNote,
 }: Props) => {
     const [editingNote, setEditingNote] = useState<Note>();
     const [id, setId] = useState<number>();
@@ -50,15 +52,6 @@ export const Editor: React.FC<Props> = ({
         // selectedNote;
     };
 
-    const clearEditor = () => {
-        setId(null);
-        setEditingNote(null);
-        setTitle("");
-        setBody("");
-        setChildren("");
-        setCleanHtml("");
-    };
-
     const createNote = (): void => {
         axios
             .post(window.location.origin + `/notes`, {
@@ -81,8 +74,7 @@ export const Editor: React.FC<Props> = ({
             })
             .then((response) => {
                 console.log("Update sent.");
-                onUpdateOrDeleteNote();
-                setupEditor();
+                onUpdateNote();
             })
             .catch((error) => {
                 console.log(error);
@@ -94,8 +86,7 @@ export const Editor: React.FC<Props> = ({
             .delete(window.location.origin + "/notes/" + `${id}`)
             .then((response) => {
                 console.log(response);
-                clearEditor();
-                onUpdateOrDeleteNote();
+                onDeleteNote();
             })
             .catch((error) => console.log(error));
     };
@@ -114,15 +105,16 @@ export const Editor: React.FC<Props> = ({
                     />
                 </div>
                 <div className="mb-3 ms-4 d-grid bg-light">
-                    {children?.map((child) => (
-                        <>
+                    {children?.map((child) => {
+                        return (
                             <RecursiveComponent
+                                key={child.id}
                                 data={child}
                                 level={0}
                                 onClickLink={onSelectChild}
                             />
-                        </>
-                    ))}
+                        );
+                    })}
                 </div>
                 <div className="mb-3">
                     <textarea
