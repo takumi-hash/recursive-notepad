@@ -37,7 +37,7 @@ function App() {
         <>
             <div className="row justify-content-center">
                 <h2>My Notes</h2>
-                <div className="col-md-4">
+                <div className="col-md-4 card-list">
                     {notes.map((note) => {
                         return (
                             <NoteItem
