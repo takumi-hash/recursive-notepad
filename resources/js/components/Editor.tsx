@@ -12,12 +12,14 @@ import {
 
 type Props = {
     selectedNoteId: number;
+    onSelectChild: (note: Note) => void;
     getNotes: () => void;
     clearEditor: () => void;
 };
 
 export const Editor: React.FC<Props> = ({
     selectedNoteId,
+    onSelectChild,
     getNotes,
     clearEditor,
 }: Props) => {
@@ -51,10 +53,6 @@ export const Editor: React.FC<Props> = ({
 
         const previewData = await getSanitizedPreview(selectedNoteId);
         setCleanHtml(previewData);
-    };
-
-    const onSelectChild = () => {
-        // selectedNote;
     };
 
     const createNote = (): void => {

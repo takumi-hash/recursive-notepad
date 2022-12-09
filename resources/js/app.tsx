@@ -53,6 +53,7 @@ function App() {
                     <Editor
                         key={selectedNote.id}
                         selectedNoteId={selectedNote.id}
+                        onSelectChild={onSelectNote}
                         getNotes={() => getNotes()}
                         clearEditor={() => clearEditor()}
                     />
