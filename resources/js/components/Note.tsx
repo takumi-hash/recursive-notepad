@@ -33,7 +33,7 @@ const Note = () => {
             .catch((error) => console.log(error));
     }, []);
 
-    const [selectedId, setSelectedId] = useState<string>("");
+    const [selectedId, setSelectedId] = useState<number>();
     const handleIdChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         setSelectedId(e.target.value);
     };
@@ -137,7 +137,7 @@ const Note = () => {
                             </div>
                             <div className="card-body">
                                 <p>{note.body}</p>
-                                <p> Create At: {note.created_at}</p>
+                                <p>Create At: {note.created_at}</p>
                                 <p>Updated At: {note.updated_at}</p>
                                 <button
                                     className="btn btn-outline-primary me-3"
@@ -185,7 +185,7 @@ const Note = () => {
                         <textarea
                             className="form-control"
                             id="bodyText"
-                            rows="10"
+                            rows={10}
                             value={selectedBody}
                             onChange={handleBodyChange}
                             placeholder="本文"

@@ -6,9 +6,20 @@ import NoteItem from "./components/NoteItem";
 import { Note } from "./types/Note";
 import { getMyNotes } from "./lib/notes";
 
+const emptyNote: Note = {
+    id: undefined,
+    title: "",
+    body: "",
+};
+
 function App() {
     const [notes, setNotes] = useState<Note[]>([]);
-    const [selectedNote, setSelectedNote] = useState<Note>(0);
+    const emptyNote: Note = {
+        id: undefined,
+        title: "",
+        body: "",
+    };
+    const [selectedNote, setSelectedNote] = useState<Note>(emptyNote);
 
     useEffect(() => {
         getNotes();
@@ -28,12 +39,6 @@ function App() {
     };
 
     const onDeleteNote = () => {
-        getNotes();
-        const emptyNote: Note = {
-            id: undefined,
-            title: "",
-            body: "",
-        };
         setSelectedNote(emptyNote);
     };
 
