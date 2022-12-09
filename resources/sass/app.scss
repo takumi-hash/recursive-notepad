@@ -12,10 +12,7 @@
 //     background: linear-gradient(transparent 40%, #00ffff 80%);
 // }
 
+// Animation added.
 .card-list * {
     transition: all 0.3s 0s ease-in-out;
-}
-
-.card-list .card {
-    transition: all 2s 0s ease-in-out;
 }

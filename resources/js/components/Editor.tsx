@@ -86,7 +86,7 @@ export const Editor: React.FC<Props> = ({
 
     return (
         <>
-            <form action="">
+            <form action="" className="editor">
                 <div className="">
                     <input
                         type="text"
