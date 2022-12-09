@@ -1,25 +1,20 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { Note } from "../types/Note";
+import { deleteNote } from "../lib/notes";
 
 type Props = {
     note: Note;
     onSelectNote: () => void;
+    onDeleteNote: () => void;
 };
 
-export const NoteItem: React.FC<Props> = ({ note, onSelectNote }: Props) => {
+export const NoteItem: React.FC<Props> = ({
+    note,
+    onSelectNote,
+    getNotes,
+}: Props) => {
     useEffect(() => {}, []);
-
-    // const deleteNote = (id: number) => {
-    //     axios
-    //         .delete(window.location.origin + "/notes/" + `${id}`)
-    //         .then((response) => {
-    //             console.log(response);
-    //             setNotes(notes.filter((note) => note.id !== id));
-    //             // setSelectedNote(Note);
-    //         })
-    //         .catch((error) => console.log(error));
-    // };
 
     return (
         <>
@@ -29,8 +24,8 @@ export const NoteItem: React.FC<Props> = ({ note, onSelectNote }: Props) => {
                 </div>
                 <div className="card-body">
                     <p>{note.body}</p>
-                    <p>Create At: {note.created_at}</p>
-                    <p>Updated At: {note.updated_at}</p>
+                    <p>{"Create At: " + note.created_at}</p>
+                    <p>{"Updated At: " + note.updated_at}</p>
                     <button
                         className="btn btn-outline-primary me-3"
                         onClick={() => onSelectNote()}
@@ -40,7 +35,10 @@ export const NoteItem: React.FC<Props> = ({ note, onSelectNote }: Props) => {
                     </button>
                     <button
                         className="btn btn-outline-danger me-3"
-                        // onClick={() => deleteNote(note.id)}
+                        onClick={() => {
+                            deleteNote(note.id);
+                            getNotes();
+                        }}
                         type="button"
                     >
                         削除

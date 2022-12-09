@@ -64,3 +64,14 @@ export const getSanitizedPreview = async (noteId: number) => {
     const cleanHtml = sanitizeHtml(parsedbody);
     return cleanHtml;
 }
+
+export const deleteNote = async (id: number) => {
+    await axios
+        .delete(window.location.origin + "/notes/" + `${id}`)
+        .then((response) => {
+            console.log(response);
+        })
+        .catch((error) => {
+            console.log(error);
+        });
+};

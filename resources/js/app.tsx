@@ -14,11 +14,6 @@ const emptyNote: Note = {
 
 function App() {
     const [notes, setNotes] = useState<Note[]>([]);
-    const emptyNote: Note = {
-        id: undefined,
-        title: "",
-        body: "",
-    };
     const [selectedNote, setSelectedNote] = useState<Note>(emptyNote);
 
     useEffect(() => {
@@ -34,12 +29,7 @@ function App() {
         setSelectedNote(note);
     };
 
-    const onUpdateNote = () => {
-        getNotes();
-    };
-
-    const onDeleteNote = () => {
-        getNotes();
+    const clearEditor = () => {
         setSelectedNote(emptyNote);
     };
 
@@ -54,6 +44,7 @@ function App() {
                                 key={note.id}
                                 note={note}
                                 onSelectNote={() => onSelectNote(note)}
+                                getNotes={() => getNotes()}
                             />
                         );
                     })}
@@ -62,8 +53,8 @@ function App() {
                     <Editor
                         key={selectedNote.id}
                         selectedNoteId={selectedNote.id}
-                        onUpdateNote={() => onUpdateNote()}
-                        onDeleteNote={() => onDeleteNote()}
+                        getNotes={() => getNotes()}
+                        clearEditor={() => clearEditor()}
                     />
                 </div>
             </div>
