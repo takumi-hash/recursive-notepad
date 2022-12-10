@@ -7,6 +7,12 @@
     <!-- CSRF Token -->
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
+    <!-- OGP -->
+    <meta property="og:title" content="Recursive Text" />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="{{ env('APP_URL') }}" />
+    <meta property="og:image" content="{{ env('APP_URL') }}/images/ogp.jpg" }} />
+
     <title>{{ config('app.name', 'Laravel') }}</title>
 
     <!-- Fonts -->
