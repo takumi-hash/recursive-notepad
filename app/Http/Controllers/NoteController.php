@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use App\Models\Note;
 
 class NoteController extends Controller
 {
@@ -13,6 +14,26 @@ class NoteController extends Controller
     
     public function hasSelfReference($text, $id){
         if(preg_match('/%%'.$id.'%%/', $text, $res)> 0){
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    public function hasNonExistingReference($text, $id){
+        preg_match_all("/%%[\d]+%%/",$text,$out, PREG_PATTERN_ORDER);
+        foreach($out as $item){
+            $child_id = str_replace("%%", "", $item);
+            $check = Note::find($id)->children()->where('parent_id', $id)->where('child_id', $child_id)->exists();
+            if ($check){
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public function hasOnlySafeReference($text, $id){
+        if($this->hasSelfReference($text, $id)==false && $this->hasNonExistingReference($text, $id)==false){
             return true;
         } else {
             return false;
@@ -46,11 +67,22 @@ class NoteController extends Controller
     }
     
     public function create(Request $request){
-        // TODO: add filtering onley existing id.
+        if($this->hasOnlySafeReference($request->body, $id)==false){
+            return response()->json([
+                'message' => 'Reference is invalid.',
+            ], 500);
+        }
         $new_note = Auth::user()->notes()->create([
             'title'=>$request->title,
             'body'=>$request->body,
         ]);
+
+        // make child relation
+        preg_match_all("/%%[\d]+%%/",$request->body,$out, PREG_PATTERN_ORDER);
+        foreach($out as $item){
+            $child_id = str_replace("%%", "", $item);     
+            $new_note->children()->syncWithoutDetaching($child_id);
+        }
 
         $notes = Auth::user()->notes()->orderBy('updated_at', 'desc')->get();
         if ($notes) {
@@ -65,15 +97,23 @@ class NoteController extends Controller
     }
 
     public function update(Request $request, $id){
-        if($this->hasSelfReference($request->body,$id)){
+        if($this->hasOnlySafeReference($request->body, $id)==false){
             return response()->json([
-                'message' => 'Self reference is forbidden.',
+                'message' => 'Reference is invalid.',
             ], 500);
         }
+
         $note = Auth::user()->notes()->find($id);
         $note->title = $request->title;
         $note->body = $request->body;
         $note->save();
+
+        // make child relation
+        preg_match_all("/%%[\d]+%%/",$request->body,$out, PREG_PATTERN_ORDER);
+        foreach($out as $item){
+            $child_id = str_replace("%%", "", $item);     
+            $note->children()->syncWithoutDetaching($child_id);
+        }
 
         $notes = Auth::user()->notes()->orderBy('updated_at', 'desc')->get();
         if ($notes) {
