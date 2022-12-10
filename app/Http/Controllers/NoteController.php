@@ -20,20 +20,18 @@ class NoteController extends Controller
         }
     }
 
-    public function hasNonExistingReference($text, $id){
-        preg_match_all("/%%[\d]+%%/",$text,$out, PREG_PATTERN_ORDER);
-        foreach($out as $item){
+    public function hasNonExistingReference($text){
+        $results = array();
+        preg_match_all("/%%\d+%%/",$text,$out, PREG_PATTERN_ORDER);
+        foreach($out[0] as $item){
             $child_id = str_replace("%%", "", $item);
-            $check = Note::find($id)->children()->where('parent_id', $id)->where('child_id', $child_id)->exists();
-            if ($check){
-                return true;
-            }
+            $results[] = \DB::table('notes')->where('id', $child_id)->exists();
         }
-        return false;
+        return in_array(false, $results);
     }
 
     public function hasOnlySafeReference($text, $id){
-        if($this->hasSelfReference($text, $id)==false && $this->hasNonExistingReference($text, $id)==false){
+        if($this->hasSelfReference($text, $id)==false && $this->hasNonExistingReference($text)==false){
             return true;
         } else {
             return false;
@@ -67,11 +65,13 @@ class NoteController extends Controller
     }
     
     public function create(Request $request){
-        if($this->hasOnlySafeReference($request->body, $id)==false){
+        $statement = \DB::select("SHOW TABLE STATUS LIKE 'parent_child'");
+        if($this->hasOnlySafeReference($request->body, $statement[0]->Auto_increment)==false){
             return response()->json([
                 'message' => 'Reference is invalid.',
             ], 500);
         }
+
         $new_note = Auth::user()->notes()->create([
             'title'=>$request->title,
             'body'=>$request->body,
@@ -81,7 +81,7 @@ class NoteController extends Controller
         preg_match_all("/%%[\d]+%%/",$request->body,$out, PREG_PATTERN_ORDER);
         foreach($out as $item){
             $child_id = str_replace("%%", "", $item);     
-            $new_note->children()->syncWithoutDetaching($child_id);
+            $new_note->children()->sync($child_id);
         }
 
         $notes = Auth::user()->notes()->orderBy('updated_at', 'desc')->get();
@@ -112,7 +112,7 @@ class NoteController extends Controller
         preg_match_all("/%%[\d]+%%/",$request->body,$out, PREG_PATTERN_ORDER);
         foreach($out as $item){
             $child_id = str_replace("%%", "", $item);     
-            $note->children()->syncWithoutDetaching($child_id);
+            $note->children()->sync($child_id);
         }
 
         $notes = Auth::user()->notes()->orderBy('updated_at', 'desc')->get();
