@@ -12,7 +12,97 @@
 //     background: linear-gradient(transparent 40%, #00ffff 80%);
 // }
 
-// Animation added.
+body {
+    height: 100vh;
+    overflow: hidden;
+    scrollbar-width: none;
+}
+
+body *::-webkit-scrollbar {
+    display: none;
+}
+
+// Component
+.card-list {
+    height: 100vh;
+    overflow: scroll;
+    visibility: visible;
+    padding-bottom: 30vh;
+}
+
+.card {
+    // Color
+    background-color: $white;
+
+    // Effect
+    border: none;
+    /* offset-x | offset-y | blur-radius | spread-radius | color */
+    box-shadow: 0 0px 12px 0 rgba($black, 0.1);
+
+    // Spacing
+    padding: 20px;
+}
+
+.card-header {
+    // Color
+    background-color: $white;
+
+    // Effect
+    border: none;
+}
+
+.card-body p, #previewArea{
+    // Typography
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 3;
+    overflow: hidden;
+}
+
+#compose-buttons {
+
+}
+
+.editor {
+    // Color
+    background-color: $white;
+
+    // Effect
+    /* offset-x | offset-y | blur-radius | spread-radius | color */
+    box-shadow: 0 0px 12px 0 rgba($black, 0.1);
+
+    // Layout
+    height: 100%;
+
+    // Sapacing
+    padding: 20px;
+}
+
+.form-control {
+    border:none;
+    border-bottom: 1px solid $gray-400;
+    border-radius: 0;
+}
+
+.form-control::placeholder {
+    color: $gray-400;
+}
+
+input.form-control#titleText {
+    font-size: 2em;
+}
+
+textarea.form-control#bodyText {
+
+    // Layout
+    height: 300px;
+}
+
+div#composeButtons {
+   height: 5vh; 
+}
+
+// Animation
 .card-list * {
     transition: all 0.3s 0s ease-in-out;
 }

@@ -37,7 +37,7 @@ function App() {
         <>
             <div className="row justify-content-center">
                 <h2>My Notes</h2>
-                <div className="col-md-4 card-list">
+                <div className="col-md-4 card-list pt-2">
                     {notes.map((note) => {
                         return (
                             <NoteItem
@@ -49,7 +49,7 @@ function App() {
                         );
                     })}
                 </div>
-                <div className="col-md-8">
+                <div className="col-md-8 pt-2">
                     <Editor
                         key={selectedNote.id}
                         selectedNoteId={selectedNote.id}

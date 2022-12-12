@@ -87,80 +87,84 @@ export const Editor: React.FC<Props> = ({
     return (
         <>
             <form action="" className="editor">
-                <div className="">
-                    <input
-                        type="text"
-                        id="titleText"
-                        className="form-control"
-                        value={title}
-                        onChange={handleTitleChange}
-                        placeholder="タイトル"
-                    />
+                <div className="d-flex flex-column">
+                    <div>
+                        <input
+                            type="text"
+                            id="titleText"
+                            className="form-control"
+                            value={title}
+                            onChange={handleTitleChange}
+                            placeholder="タイトル"
+                        />
+                    </div>
+                    <div className="mb-3 ms-4 d-grid bg-light">
+                        {children?.map((child) => {
+                            return (
+                                <RecursiveComponent
+                                    key={child.id}
+                                    data={child}
+                                    level={0}
+                                    onClickLink={onSelectChild}
+                                />
+                            );
+                        })}
+                    </div>
+                    <div className="mb-3 flex-grow-1" id="bodyArea">
+                        <textarea
+                            className="form-control"
+                            id="bodyText"
+                            // rows={10}
+                            value={body}
+                            onChange={handleBodyChange}
+                            placeholder="本文"
+                        ></textarea>
+                    </div>
+                    <div className="mb-3" id="previewArea">
+                        <p>Preview</p>
+                        <div
+                            dangerouslySetInnerHTML={{
+                                __html: cleanHtml,
+                            }}
+                        ></div>
+                    </div>
+                    <div className="mb-3" id="composeButtons">
+                        {(() => {
+                            if (selectedNoteId) {
+                                return (
+                                    <button
+                                        className="btn btn-success me-3"
+                                        onClick={onClickUpdate}
+                                        type="button"
+                                    >
+                                        更新
+                                    </button>
+                                );
+                            } else {
+                                return (
+                                    <button
+                                        className="btn btn-primary me-3"
+                                        onClick={createNote}
+                                        type="submit"
+                                    >
+                                        新規保存
+                                    </button>
+                                );
+                            }
+                        })()}
+                        <button
+                            className="btn btn-outline-danger me-3"
+                            onClick={() => {
+                                deleteNote(selectedNoteId);
+                                getNotes();
+                                clearEditor();
+                            }}
+                            type="button"
+                        >
+                            削除
+                        </button>
+                    </div>
                 </div>
-                <div className="mb-3 ms-4 d-grid bg-light">
-                    {children?.map((child) => {
-                        return (
-                            <RecursiveComponent
-                                key={child.id}
-                                data={child}
-                                level={0}
-                                onClickLink={onSelectChild}
-                            />
-                        );
-                    })}
-                </div>
-                <div className="mb-3">
-                    <textarea
-                        className="form-control"
-                        id="bodyText"
-                        rows={10}
-                        value={body}
-                        onChange={handleBodyChange}
-                        placeholder="本文"
-                    ></textarea>
-                </div>
-                <div className="mb-3">
-                    <p>Preview</p>
-                    <div
-                        dangerouslySetInnerHTML={{
-                            __html: cleanHtml,
-                        }}
-                    ></div>
-                </div>
-                {(() => {
-                    if (selectedNoteId) {
-                        return (
-                            <button
-                                className="btn btn-success me-3"
-                                onClick={onClickUpdate}
-                                type="button"
-                            >
-                                更新
-                            </button>
-                        );
-                    } else {
-                        return (
-                            <button
-                                className="btn btn-primary me-3"
-                                onClick={createNote}
-                                type="submit"
-                            >
-                                新規保存
-                            </button>
-                        );
-                    }
-                })()}
-                <button
-                    className="btn btn-outline-danger me-3"
-                    onClick={() => {
-                        deleteNote(selectedNoteId);
-                        getNotes();
-                        clearEditor();
-                    }}
-                    type="button"
-                >
-                    削除
-                </button>
             </form>
         </>
     );
